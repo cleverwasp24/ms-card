@@ -1,0 +1,25 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+spring:
+  data:
+    mongodb:
+      url: '27017'
+      auto-index-creation: 'true'
+      database: mscard
+      host: localhost
+  config:
+    import: optional:configserver:http://localhost:8090
+  application:
+    name: ms-card
+logging:
+  level:
+    '[com.nttdata.bootcamp.mscard]': info
+server:
+  port: '8084'
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8089/eureka/
