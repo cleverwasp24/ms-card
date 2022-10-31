@@ -5,6 +5,6 @@ import reactor.core.publisher.Mono;
 
 public interface ClientService {
 
-    Mono<ClientDTO> findById(Integer id);
+    Mono<ClientDTO> findById(Long id);
 
 }

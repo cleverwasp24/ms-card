@@ -19,7 +19,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Mono<ClientDTO> findById(Integer id) {
+    public Mono<ClientDTO> findById(Long id) {
         Mono<ClientDTO> clientById =  this.webClient.get()
                 .uri("/bootcamp/client/find/{id}", id)
                 .retrieve()

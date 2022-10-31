@@ -25,10 +25,10 @@ public class TransactionController {
         return transactionService.findAll();
     }
 
-    @PostMapping(value = "/purchase")
+    @PostMapping(value = "/creditPurchase")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<String> purchase(@RequestBody TransactionDTO transactionDTO) {
-        return transactionService.purchase(transactionDTO);
+    public Mono<String> creditPurchase(@RequestBody TransactionDTO transactionDTO) {
+        return transactionService.creditPurchase(transactionDTO);
     }
 
     @PostMapping(value = "/payDebt")
@@ -39,7 +39,7 @@ public class TransactionController {
 
     @GetMapping(value = "/find/{id}")
     @ResponseBody
-    public Mono<ResponseEntity<Transaction>> findTransactionById(@PathVariable Integer id) {
+    public Mono<ResponseEntity<Transaction>> findTransactionById(@PathVariable Long id) {
         return transactionService.findById(id)
                 .map(creditCard -> ResponseEntity.ok().body(creditCard))
                 .onErrorResume(e -> {
@@ -51,7 +51,7 @@ public class TransactionController {
 
     @PutMapping(value = "/update/{id}")
     @ResponseBody
-    public Mono<ResponseEntity<Transaction>> updateTransaction(@PathVariable Integer id, @RequestBody Transaction transaction) {
+    public Mono<ResponseEntity<Transaction>> updateTransaction(@PathVariable Long id, @RequestBody Transaction transaction) {
         return transactionService.update(id, transaction)
                 .map(a -> new ResponseEntity<>(a, HttpStatus.ACCEPTED))
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -59,14 +59,14 @@ public class TransactionController {
 
     @DeleteMapping(value = "/delete/{id}")
     @ResponseBody
-    public Mono<Void> deleteByIdTransaction(@PathVariable Integer id) {
+    public Mono<Void> deleteByIdTransaction(@PathVariable Long id) {
         return transactionService.delete(id)
                 .defaultIfEmpty(null);
     }
 
-    @GetMapping(value = "/findAllByCreditCardId/{id}")
+    @GetMapping(value = "/findAllByCardId/{id}")
     @ResponseBody
-    public Flux<Transaction> findAllByCreditCardId(@PathVariable Integer id) {
-        return transactionService.findAllByCreditCardId(id);
+    public Flux<Transaction> findAllByCardId(@PathVariable Long id) {
+        return transactionService.findAllByCardId(id);
     }
 }

@@ -5,8 +5,12 @@ import java.util.Map;
 
 public enum TransactionTypeEnum {
 
-    PURCHASE(0),
-    PAY_DEBT(1);
+    CREDIT_PURCHASE(0),
+    PAY_DEBT(1),
+
+    DEBIT_PURCHASE(2),
+
+    DEPOSIT(3);
 
     private int value;
     private static Map map = new HashMap();

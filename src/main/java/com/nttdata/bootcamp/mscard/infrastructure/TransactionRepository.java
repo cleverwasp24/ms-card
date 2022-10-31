@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
 @Repository
-public interface TransactionRepository extends ReactiveMongoRepository<Transaction, Integer> {
+public interface TransactionRepository extends ReactiveMongoRepository<Transaction, Long> {
 
-    Flux<Transaction> findAllByCreditCardId(Integer id);
+    Flux<Transaction> findAllByCardId(Long id);
 }

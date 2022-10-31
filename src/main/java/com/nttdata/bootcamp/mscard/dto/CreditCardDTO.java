@@ -5,9 +5,8 @@ import lombok.Data;
 @Data
 public class CreditCardDTO {
 
-    private Integer id;
-    private Integer clientId;
-    private String creditCardNumber;
+    private Long clientId;
+    private String cardNumber;
     private Double creditLine;
 
 }

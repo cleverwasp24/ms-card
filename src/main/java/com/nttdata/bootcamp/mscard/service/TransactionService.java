@@ -11,17 +11,21 @@ public interface TransactionService {
 
     Mono<Transaction> create(Transaction transaction);
 
-    Mono<Transaction> findById(Integer id);
+    Mono<Transaction> findById(Long id);
 
-    Mono<Transaction> update(Integer id, Transaction transaction);
+    Mono<Transaction> update(Long id, Transaction transaction);
 
-    Mono<Void> delete(Integer id);
+    Mono<Void> delete(Long id);
 
-    Mono<String> purchase(TransactionDTO transactionDTO);
+    Mono<String> creditPurchase(TransactionDTO transactionDTO);
 
     Mono<String> payDebt(TransactionDTO transactionDTO);
 
-    Flux<Transaction> findAllByCreditCardId(Integer id);
+    Mono<String> debitPurchase(TransactionDTO transactionDTO);
+
+    Mono<String> debitDeposit(TransactionDTO transactionDTO);
+
+    Flux<Transaction> findAllByCardId(Long id);
 
     Mono<String> checkFields(TransactionDTO transaction);
 

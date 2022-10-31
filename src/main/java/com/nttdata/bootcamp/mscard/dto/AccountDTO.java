@@ -3,9 +3,9 @@ package com.nttdata.bootcamp.mscard.dto;
 import lombok.Data;
 
 @Data
-public class ClientDTO {
+public class AccountDTO {
 
     private Long id;
-    private Integer clientType;
+    private Double balance;
 
 }

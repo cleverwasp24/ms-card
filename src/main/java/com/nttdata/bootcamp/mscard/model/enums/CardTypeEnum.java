@@ -3,26 +3,26 @@ package com.nttdata.bootcamp.mscard.model.enums;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum CreditCardTypeEnum {
+public enum CardTypeEnum {
 
-    PERSONAL(0),
-    BUSINESS(1);
+    CREDIT(0),
+    DEBIT(1);
 
     private int value;
     private static Map map = new HashMap();
 
-    private CreditCardTypeEnum(int value) {
+    private CardTypeEnum(int value) {
         this.value = value;
     }
 
     static {
-        for (CreditCardTypeEnum creditCardType : CreditCardTypeEnum.values()) {
+        for (CardTypeEnum creditCardType : CardTypeEnum.values()) {
             map.put(creditCardType.value, creditCardType);
         }
     }
 
-    public static CreditCardTypeEnum valueOf(int creditCardType) {
-        return (CreditCardTypeEnum) map.get(creditCardType);
+    public static CardTypeEnum valueOf(int creditCardType) {
+        return (CardTypeEnum) map.get(creditCardType);
     }
 
     public int getValue() {
