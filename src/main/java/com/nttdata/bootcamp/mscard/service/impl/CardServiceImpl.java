@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Log4j2
 @Service
 public class CardServiceImpl implements CardService {
@@ -83,11 +86,12 @@ public class CardServiceImpl implements CardService {
     public Mono<String> createDebitCard(DebitCardDTO debitCardDTO) {
         log.info("Creating debit card: " + debitCardDTO.toString());
         return checkFieldsDC(debitCardDTO).switchIfEmpty(clientService.findById(debitCardDTO.getClientId()).flatMap(c -> {
-            accountService.findAllByClientId(c.getId()).collectList().flatMap(l -> {
+            return accountService.findAllByClientId(c.getId()).collectList().flatMap(l -> {
                 if (l.isEmpty()) {
                     return Mono.error(new IllegalArgumentException("Associated accounts not found"));
                 } else {
-                    if (l.containsAll(debitCardDTO.getAssociatedAccountsId())) {
+                    List<Long> ids = l.stream().map(a -> a.getId()).collect(Collectors.toList());
+                    if (ids.containsAll(debitCardDTO.getAssociatedAccountsId())) {
                         Card card = cardDTOMapper.convertToEntity(debitCardDTO, CardTypeEnum.DEBIT, ClientCardTypeEnum.valueOf(c.getClientType()));
                         return databaseSequenceService.generateSequence(Card.SEQUENCE_NAME).flatMap(s -> {
                             card.setId(s);
@@ -99,8 +103,6 @@ public class CardServiceImpl implements CardService {
                     }
                 }
             });
-            Card card = cardDTOMapper.convertToEntity(debitCardDTO, CardTypeEnum.DEBIT, ClientCardTypeEnum.valueOf(c.getClientType()));
-            return cardRepository.save(card).then(Mono.just("Debit card created! " + cardDTOMapper.convertToDto(card)));
         }).switchIfEmpty(Mono.error(new IllegalArgumentException("Client not found"))));
     }
 

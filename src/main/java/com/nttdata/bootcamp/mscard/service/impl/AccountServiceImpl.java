@@ -6,8 +6,11 @@ import com.nttdata.bootcamp.mscard.dto.ClientDTO;
 import com.nttdata.bootcamp.mscard.dto.TransactionDTO;
 import com.nttdata.bootcamp.mscard.service.AccountService;
 import com.nttdata.bootcamp.mscard.service.ClientService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -60,16 +63,23 @@ public class AccountServiceImpl implements AccountService {
         return cardPurchase;
     }
 
+    @CircuitBreaker(name = "service-account", fallbackMethod = "cardDepositFallback")
+    @TimeLimiter(name = "service-account")
     @Override
     public Mono<String> cardDeposit(AccountTransactionDTO transactionDTO) {
-        Mono<String> cardDeposit = this.webClient.post()
+        return this.webClient.post()
                 .uri("/bootcamp/transaction/cardDeposit")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(Mono.just(transactionDTO), TransactionDTO.class)
-                .exchangeToMono(cr -> cr.bodyToMono(String.class))
-                .onErrorMap(t -> new RuntimeException("Error in card deposit"));
-
-        log.info("Card deposit done from service ms-account:" + cardDeposit);
-        return cardDeposit;
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Error " + clientResponse.statusCode())))
+                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new RuntimeException("Error " + clientResponse.statusCode())))
+                .bodyToMono(String.class);
     }
+
+    public Mono<String> cardDepositFallback(AccountTransactionDTO transactionDTO, Throwable t) {
+        log.error("Fallback method for cardDeposit (ACCOUNT) executed {}", t.getMessage());
+        return Mono.empty();
+    }
+
 }

@@ -10,6 +10,6 @@ public class DebitCardDTO {
     private Long clientId;
     private String cardNumber;
     private Integer primaryAccountId;
-    private List<Integer> associatedAccountsId;
+    private List<Long> associatedAccountsId;
 
 }

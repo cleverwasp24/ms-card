@@ -3,10 +3,16 @@ management:
     web:
       exposure:
         include: '*'
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
 spring:
   data:
     mongodb:
-      url: '27017'
+      port: 27017
       auto-index-creation: 'true'
       database: mscard
       host: localhost
@@ -23,3 +29,33 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8089/eureka/
+resilience4j:
+  circuitbreaker:
+    configs:
+      shared:
+        register-health-indicator: true
+        sliding-window-type: count_based
+        sliding-window-size: 5
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 50
+        permitted-number-of-calls-in-half-open-state: 1
+        max-wait-duration-in-half-open-state: 10s
+        wait-duration-in-open-state: 10s
+        slow-call-duration-threshold: 2s
+        writable-stack-trace-enabled: true
+        automatic-transition-from-open-to-half-open-enabled: true
+    instances:
+      service-client:
+        base-config: shared
+      service-account:
+        base-config: shared
+  timelimiter:
+    configs:
+      shared:
+        timeout-duration: 2s
+        cancel-running-future: true
+    instances:
+      service-client:
+        base-config: shared
+      service-account:
+        base-config: shared

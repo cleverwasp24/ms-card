@@ -37,6 +37,18 @@ public class TransactionController {
         return transactionService.payDebt(transactionDTO);
     }
 
+    @PostMapping(value = "/debitDeposit")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<String> deposit(@RequestBody TransactionDTO transactionDTO) {
+        return transactionService.debitDeposit(transactionDTO);
+    }
+
+    @PostMapping(value = "/debitPurchase")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<String> withdraw(@RequestBody TransactionDTO transactionDTO) {
+        return transactionService.debitPurchase(transactionDTO);
+    }
+
     @GetMapping(value = "/find/{id}")
     @ResponseBody
     public Mono<ResponseEntity<Transaction>> findTransactionById(@PathVariable Long id) {

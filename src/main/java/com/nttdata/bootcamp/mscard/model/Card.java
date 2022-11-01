@@ -41,7 +41,7 @@ public class Card {
     @Nullable
     private Integer primaryAccountId;
     @Nullable
-    private List<Integer> associatedAccountsId;
+    private List<Long> associatedAccountsId;
     @NonNull
     private LocalDateTime creationDate;
 
