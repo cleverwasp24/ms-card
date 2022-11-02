@@ -26,11 +26,7 @@ public class CardDTOMapper {
         Card card = modelMapper.map(creditCardDTO, Card.class);
         card.setCardType(cType.ordinal());
         card.setClientCardType(ccType.ordinal());
-        switch (cType) {
-            case CREDIT:
-                card.setAvailableCredit(card.getCreditLine());
-                break;
-        }
+        card.setAvailableCredit(card.getCreditLine());
         card.setCreationDate(LocalDateTime.now());
         return card;
     }

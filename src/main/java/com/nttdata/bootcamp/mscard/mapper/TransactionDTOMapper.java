@@ -18,9 +18,23 @@ public class TransactionDTOMapper {
     }
 
     public Transaction convertToEntity(TransactionDTO transactionDTO, TransactionTypeEnum type) {
-        Transaction account = modelMapper.map(transactionDTO, Transaction.class);
-        account.setTransactionType(type.ordinal());
-        account.setTransactionDate(LocalDateTime.now());
-        return account;
+        Transaction transaction = modelMapper.map(transactionDTO, Transaction.class);
+        transaction.setTransactionType(type.ordinal());
+        switch (type) {
+            case CREDIT_PURCHASE:
+                transaction.setDescription("Credit card purchase -$" + transactionDTO.getAmount());
+                break;
+            case PAY_DEBT:
+                transaction.setDescription("Credit card pay debt +$" + transactionDTO.getAmount());
+                break;
+            case DEBIT_PURCHASE:
+                transaction.setDescription("Debit card purchase -$" + transactionDTO.getAmount());
+                break;
+            case DEPOSIT:
+                transaction.setDescription("Debit card deposit +$" + transactionDTO.getAmount());
+                break;
+        }
+        transaction.setTransactionDate(LocalDateTime.now());
+        return transaction;
     }
 }

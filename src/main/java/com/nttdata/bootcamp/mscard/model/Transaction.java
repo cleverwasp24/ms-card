@@ -32,7 +32,7 @@ public class Transaction {
     private Double amount;
     @Nullable
     private Long accountId;
-    @NonNull
+    @Nullable
     private Double newAvailableCredit;
     @NonNull
     private LocalDateTime transactionDate;

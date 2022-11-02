@@ -1,9 +1,13 @@
 package com.nttdata.bootcamp.mscard.controller;
 
+import com.nttdata.bootcamp.mscard.dto.CardReportDTO;
 import com.nttdata.bootcamp.mscard.dto.CreditCardDTO;
 import com.nttdata.bootcamp.mscard.dto.DebitCardDTO;
+import com.nttdata.bootcamp.mscard.dto.PeriodDTO;
 import com.nttdata.bootcamp.mscard.model.Card;
+import com.nttdata.bootcamp.mscard.model.Transaction;
 import com.nttdata.bootcamp.mscard.service.impl.CardServiceImpl;
+import com.nttdata.bootcamp.mscard.service.impl.TransactionServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +23,9 @@ public class CardController {
 
     @Autowired
     CardServiceImpl cardService;
+
+    @Autowired
+    TransactionServiceImpl transactionService;
 
     @GetMapping(value = "/findAllCards")
     @ResponseBody
@@ -81,6 +88,27 @@ public class CardController {
     @ResponseBody
     public Flux<Card> findAllDebitByClientId(@PathVariable Long id) {
         return cardService.findAllDebitByClientId(id);
+    }
+
+
+    @GetMapping(value = "/getDailyBalanceReportCurrentMonth/{id}")
+    @ResponseBody
+    public Mono<CardReportDTO> getDailyBalanceReportCurrentMonth(@PathVariable Long id) {
+        return transactionService.generateCardReportCurrentMonth(id);
+    }
+
+    @GetMapping(value = "/getDailyBalanceReport/{id}")
+    @ResponseBody
+    public Mono<CardReportDTO> getDailyBalanceReport(@PathVariable Long id, @RequestBody PeriodDTO periodDTO) {
+        return transactionService.findById(id)
+                .flatMap(card -> transactionService.generateCardReport(card.getId(), periodDTO))
+                .switchIfEmpty(Mono.error(new Exception("Card not found")));
+    }
+
+    @GetMapping(value = "/getLatestTenTransactions/{id}")
+    @ResponseBody
+    public Flux<Transaction> getLatestTenTransactions(@PathVariable Long id) {
+        return transactionService.findAllByCardIdDesc(id).take(10);
     }
 
 }

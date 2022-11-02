@@ -6,7 +6,6 @@ import lombok.Data;
 public class TransactionDTO {
 
     private Integer cardId;
-    private String description;
     private Double amount;
 
 }

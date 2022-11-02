@@ -93,6 +93,7 @@ public class CardServiceImpl implements CardService {
                     List<Long> ids = l.stream().map(a -> a.getId()).collect(Collectors.toList());
                     if (ids.containsAll(debitCardDTO.getAssociatedAccountsId())) {
                         Card card = cardDTOMapper.convertToEntity(debitCardDTO, CardTypeEnum.DEBIT, ClientCardTypeEnum.valueOf(c.getClientType()));
+                        card.setCreditLine(l.get(0).getBalance());
                         return databaseSequenceService.generateSequence(Card.SEQUENCE_NAME).flatMap(s -> {
                             card.setId(s);
                             return cardRepository.save(card)
