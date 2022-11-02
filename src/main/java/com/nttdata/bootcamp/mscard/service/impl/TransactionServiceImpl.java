@@ -199,6 +199,21 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public Mono<CompleteReportDTO> generateCompleteReport(Long id, PeriodDTO periodDTO) {
+        log.info("Generating complete report in a period: " + periodDTO.getStart() + " - " + periodDTO.getEnd());
+        Mono<CompleteReportDTO> completeReportDTOMono = Mono.just(new CompleteReportDTO());
+        Mono<Card> cardMono = cardService.findById(id);
+        Flux<Transaction> transactionFlux = findTransactionsCardPeriod(id, periodDTO.getStart(), periodDTO.getEnd());
+        return completeReportDTOMono.flatMap(r -> cardMono.map(card -> {
+            r.setCard(card);
+            return r;
+        }).flatMap(r2 -> transactionFlux.collectList().map(transactions -> {
+            r2.setTransactions(transactions);
+            return r2;
+        })));
+    }
+
+    @Override
     public Flux<Transaction> findTransactionsCardPeriod(Long cardId, LocalDateTime start, LocalDateTime end) {
         return transactionRepository.findAllByCardIdAndTransactionDateBetween(cardId, start, end);
     }
@@ -215,7 +230,6 @@ public class TransactionServiceImpl implements TransactionService {
                     return Mono.just(transaction);
                 }));
     }
-
 
     @Override
     public Mono<CardReportDTO> generateCardReportCurrentMonth(Long id) {

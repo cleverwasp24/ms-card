@@ -1,6 +1,7 @@
 package com.nttdata.bootcamp.mscard.service;
 
 import com.nttdata.bootcamp.mscard.dto.CardReportDTO;
+import com.nttdata.bootcamp.mscard.dto.CompleteReportDTO;
 import com.nttdata.bootcamp.mscard.dto.PeriodDTO;
 import com.nttdata.bootcamp.mscard.dto.TransactionDTO;
 import com.nttdata.bootcamp.mscard.model.Transaction;
@@ -34,6 +35,8 @@ public interface TransactionService {
     Flux<Transaction> findAllByCardIdDesc(Long cardId);
 
     Mono<String> checkFields(TransactionDTO transaction);
+
+    Mono<CompleteReportDTO> generateCompleteReport(Long id, PeriodDTO periodDTO);
 
     Flux<Transaction> findTransactionsCardPeriod(Long cardId, LocalDateTime start, LocalDateTime end);
 

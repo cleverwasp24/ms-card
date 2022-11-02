@@ -72,8 +72,7 @@ public class TransactionController {
     @DeleteMapping(value = "/delete/{id}")
     @ResponseBody
     public Mono<Void> deleteByIdTransaction(@PathVariable Long id) {
-        return transactionService.delete(id)
-                .defaultIfEmpty(null);
+        return transactionService.delete(id);
     }
 
     @GetMapping(value = "/findAllByCardId/{id}")

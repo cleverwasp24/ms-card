@@ -1,9 +1,6 @@
 package com.nttdata.bootcamp.mscard.controller;
 
-import com.nttdata.bootcamp.mscard.dto.CardReportDTO;
-import com.nttdata.bootcamp.mscard.dto.CreditCardDTO;
-import com.nttdata.bootcamp.mscard.dto.DebitCardDTO;
-import com.nttdata.bootcamp.mscard.dto.PeriodDTO;
+import com.nttdata.bootcamp.mscard.dto.*;
 import com.nttdata.bootcamp.mscard.model.Card;
 import com.nttdata.bootcamp.mscard.model.Transaction;
 import com.nttdata.bootcamp.mscard.service.impl.CardServiceImpl;
@@ -94,13 +91,15 @@ public class CardController {
     @GetMapping(value = "/getDailyBalanceReportCurrentMonth/{id}")
     @ResponseBody
     public Mono<CardReportDTO> getDailyBalanceReportCurrentMonth(@PathVariable Long id) {
-        return transactionService.generateCardReportCurrentMonth(id);
+        return cardService.findById(id)
+                .flatMap(card -> transactionService.generateCardReportCurrentMonth(card.getId()))
+                .switchIfEmpty(Mono.error(new Exception("Card not found")));
     }
 
     @GetMapping(value = "/getDailyBalanceReport/{id}")
     @ResponseBody
     public Mono<CardReportDTO> getDailyBalanceReport(@PathVariable Long id, @RequestBody PeriodDTO periodDTO) {
-        return transactionService.findById(id)
+        return cardService.findById(id)
                 .flatMap(card -> transactionService.generateCardReport(card.getId(), periodDTO))
                 .switchIfEmpty(Mono.error(new Exception("Card not found")));
     }
@@ -108,7 +107,17 @@ public class CardController {
     @GetMapping(value = "/getLatestTenTransactions/{id}")
     @ResponseBody
     public Flux<Transaction> getLatestTenTransactions(@PathVariable Long id) {
-        return transactionService.findAllByCardIdDesc(id).take(10);
+        return cardService.findById(id)
+                .flatMapMany(card -> transactionService.findAllByCardIdDesc(card.getId()).take(10))
+                .switchIfEmpty(Mono.error(new Exception("Card not found")));
+    }
+
+    @GetMapping(value = "/getCompleteReport/{id}")
+    @ResponseBody
+    public Mono<CompleteReportDTO> getCompleteReport(@PathVariable Long id, @RequestBody PeriodDTO periodDTO) {
+        return cardService.findById(id)
+                .flatMap(card -> transactionService.generateCompleteReport(card.getId(), periodDTO))
+                .switchIfEmpty(Mono.error(new Exception("Card not found")));
     }
 
 }
