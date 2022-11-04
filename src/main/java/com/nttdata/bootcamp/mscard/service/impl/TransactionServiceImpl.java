@@ -7,6 +7,7 @@ import com.nttdata.bootcamp.mscard.model.Card;
 import com.nttdata.bootcamp.mscard.model.Transaction;
 import com.nttdata.bootcamp.mscard.model.enums.CardTypeEnum;
 import com.nttdata.bootcamp.mscard.model.enums.TransactionTypeEnum;
+import com.nttdata.bootcamp.mscard.service.AccountService;
 import com.nttdata.bootcamp.mscard.service.CardService;
 import com.nttdata.bootcamp.mscard.service.DatabaseSequenceService;
 import com.nttdata.bootcamp.mscard.service.TransactionService;
@@ -36,7 +37,7 @@ public class TransactionServiceImpl implements TransactionService {
     private CardService cardService;
 
     @Autowired
-    private AccountServiceImpl accountService;
+    private AccountService accountService;
 
     @Autowired
     private DatabaseSequenceService databaseSequenceService;

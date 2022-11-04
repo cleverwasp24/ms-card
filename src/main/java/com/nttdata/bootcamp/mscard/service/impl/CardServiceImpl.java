@@ -7,7 +7,9 @@ import com.nttdata.bootcamp.mscard.mapper.CardDTOMapper;
 import com.nttdata.bootcamp.mscard.model.Card;
 import com.nttdata.bootcamp.mscard.model.enums.CardTypeEnum;
 import com.nttdata.bootcamp.mscard.model.enums.ClientCardTypeEnum;
+import com.nttdata.bootcamp.mscard.service.AccountService;
 import com.nttdata.bootcamp.mscard.service.CardService;
+import com.nttdata.bootcamp.mscard.service.ClientService;
 import com.nttdata.bootcamp.mscard.service.DatabaseSequenceService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +28,10 @@ public class CardServiceImpl implements CardService {
     private CardRepository cardRepository;
 
     @Autowired
-    private ClientServiceImpl clientService;
+    private ClientService clientService;
 
     @Autowired
-    private AccountServiceImpl accountService;
+    private AccountService accountService;
 
     @Autowired
     private DatabaseSequenceService databaseSequenceService;

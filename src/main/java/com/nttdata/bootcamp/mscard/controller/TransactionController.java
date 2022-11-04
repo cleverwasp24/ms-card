@@ -2,6 +2,7 @@ package com.nttdata.bootcamp.mscard.controller;
 
 import com.nttdata.bootcamp.mscard.dto.TransactionDTO;
 import com.nttdata.bootcamp.mscard.model.Transaction;
+import com.nttdata.bootcamp.mscard.service.TransactionService;
 import com.nttdata.bootcamp.mscard.service.impl.TransactionServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import reactor.core.publisher.Mono;
 public class TransactionController {
 
     @Autowired
-    TransactionServiceImpl transactionService;
+    TransactionService transactionService;
 
     @GetMapping(value = "/findAllTransactions")
     @ResponseBody

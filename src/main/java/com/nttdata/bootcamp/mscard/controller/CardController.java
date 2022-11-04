@@ -3,6 +3,7 @@ package com.nttdata.bootcamp.mscard.controller;
 import com.nttdata.bootcamp.mscard.dto.*;
 import com.nttdata.bootcamp.mscard.model.Card;
 import com.nttdata.bootcamp.mscard.model.Transaction;
+import com.nttdata.bootcamp.mscard.service.TransactionService;
 import com.nttdata.bootcamp.mscard.service.impl.CardServiceImpl;
 import com.nttdata.bootcamp.mscard.service.impl.TransactionServiceImpl;
 import lombok.extern.log4j.Log4j2;
@@ -22,7 +23,7 @@ public class CardController {
     CardServiceImpl cardService;
 
     @Autowired
-    TransactionServiceImpl transactionService;
+    TransactionService transactionService;
 
     @GetMapping(value = "/findAllCards")
     @ResponseBody
