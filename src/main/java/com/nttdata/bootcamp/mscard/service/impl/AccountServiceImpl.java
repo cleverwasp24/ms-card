@@ -25,7 +25,7 @@ public class AccountServiceImpl implements AccountService {
 
     public AccountServiceImpl(WebClient.Builder webClientBuilder) {
         //microservicio account
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8082").build();
+        this.webClient = webClientBuilder.baseUrl("http://ms-gateway:8088").build();
     }
 
     @Override
